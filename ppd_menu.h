@@ -1,10 +1,10 @@
 /***********************************************************************
  * COSC1076 - Advanced Programming Techniques
  * Semester 2 2015 Assignment #2
- * Full Name        : CHRISTOPHER ROBERT SALTER
- * Student Number   : s3334875
- * Course Code      : COSC1076
- * Program Code     : BP162
+ * Full Name        : EDIT HERE
+ * Student Number   : EDIT HERE
+ * Course Code      : EDIT HERE
+ * Program Code     : EDIT HERE
  * Start up code provided by Paul Miller
  * Some codes are adopted here with permission by an anonymous author
  ***********************************************************************/
@@ -35,7 +35,6 @@ struct menu_item
      **/
     BOOLEAN (*function)(struct ppd_system*);
 };
-
 /**
  * In this function you need to initialise the array of menu items 
  * according to the text to be displayed for the menu. This array is 
