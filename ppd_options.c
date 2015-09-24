@@ -140,3 +140,9 @@ BOOLEAN display_coins(struct ppd_system * system)
      */
     return FALSE;
 }
+
+BOOLEAN abort_program(struct ppd_system * system)
+{
+	/* code to free memory and close program without saving */
+	return FALSE;
+}

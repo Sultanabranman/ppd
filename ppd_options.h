@@ -169,4 +169,5 @@ BOOLEAN reset_coins(struct ppd_system *);
  **/
 BOOLEAN display_coins(struct ppd_system *);
 
-
+/** This option will free system memory and close program without saving **/
+BOOLEAN abort_program(struct ppd_system *);

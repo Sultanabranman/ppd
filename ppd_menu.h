@@ -10,6 +10,8 @@
  ***********************************************************************/
 
 #include "ppd_main.h"
+#include "ppd_options.h"
+#include "ppd_utility.h"
 /**
  * @file ppd_menu.h defines the @ref menu_item type and the init_menu 
  * function which you need to call to initialise it
@@ -20,6 +22,12 @@
  * The maximum length of a menu item's text
  **/
 #define MENU_NAME_LEN 50
+
+/** Total number of menu options **/
+#define NUM_MENU_CHOICES 9
+
+#define LINELEN 80
+#define EXTRACHARS 2
 
 /**
  * represents a menu item to be displayed and executed in the program
@@ -36,6 +44,17 @@ struct menu_item
     BOOLEAN (*function)(struct ppd_system*);
 };
 
+/** Menu choices **/
+enum menu_input
+{
+	DISPLAY_ITEMS, PURCHASE_ITEMS, SAVE_AND_EXIT, ADD_ITEM, REMOVE_ITEM, 
+	    DISPLAY_COINS, RESET_STOCK, RESET_COINS, ABORT, INVALID
+};
+/**Typedef that creates a options type which is a function pointer to 
+  *menu functions
+ **/
+typedef BOOLEAN (*options)(struct ppd_system*);
+
 /**
  * In this function you need to initialise the array of menu items 
  * according to the text to be displayed for the menu. This array is 
@@ -51,4 +70,7 @@ struct menu_item
  * code more readable.
  **/
 void init_menu( struct menu_item*);
+
+/** Displays the menu **/
+enum menu_input display_menu(struct menu_item*);
 #endif

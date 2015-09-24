@@ -30,6 +30,7 @@ int main(int argc, char **argv)
 
     /* represents the data structures to manage the system */
     struct ppd_system system;
+	struct menu_item menu[NUM_MENU_CHOICES];
 
     /* init the system */
 
@@ -38,8 +39,10 @@ int main(int argc, char **argv)
     /* test if everything has been initialised correctly */
 
     /* initialise the menu system */
+	init_menu(menu);
 
     /* loop, asking for options from the menu */
+	display_menu(menu);
 
     /* run each option selected */
 
