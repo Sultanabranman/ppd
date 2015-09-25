@@ -27,12 +27,22 @@
 int main(int argc, char **argv)
 {
     /* validate command line arguments */
+	if(argc != 3)
+	{
+		fprintf(stderr, "Error: invalid arguments passed in.\n"
+		    "Correct arguments are:\n"
+			"\t./ppd <stockfile> <coinfile>\n"
+			"Where <stockfile> and <coinfile> are two valid files in the "
+			"expected format.\n");
+		return EXIT_FAILURE;
+	}
 
     /* represents the data structures to manage the system */
     struct ppd_system system;
 	struct menu_item menu[NUM_MENU_CHOICES];
 
     /* init the system */
+	system_init(&system);
 
     /* load data */
 
