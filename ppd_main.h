@@ -1,7 +1,7 @@
 /***********************************************************************
  * COSC1076 - Advanced Programming Techniques
  * Semester 2 2015 Assignment #2
-* Full Name        : CHRISTOPHER ROBERT SALTER
+ * Full Name        : CHRISTOPHER ROBERT SALTER
  * Student Number   : s3334875
  * Course Code      : COSC1076
  * Program Code     : BP162

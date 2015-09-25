@@ -62,7 +62,7 @@ BOOLEAN system_init(struct ppd_system * system)
 	
 	/** creates an empty coin struct initialised to a safe value **/
 	struct coin empty_coin;
-	empty_coin.denom = FIVE_CENTS;
+	empty_coin.denom = 0;
 	empty_coin.count = 0;
 	
 	/** initialises cash_register array to safe values **/
@@ -93,20 +93,74 @@ BOOLEAN load_coin_data(struct ppd_system * system, const char * coins_name)
 {
 	FILE * coin_file;
 	char * token;
+	char * end;
 	struct coin new_coin;
+	int count = 0;
+	
+	char line[LINELEN];
 	
 	coin_file = fopen(coins_name, "r");
 	
-	token = strtok(coin_file, COIN_DELIM);	
-	
-	while(token != NULL)
+	if(coin_file == NULL)
 	{
-		new_coin.
+		fprintf(stderr, "Error: coin file failed to open.\n");
+		exit(EXIT_FAILURE);
+	}		
+	
+	while(fgets(line, LINELEN + EXTRACHARS, coin_file))
+	{
+		/** get denomination from file and assign to new coin **/
+		token = strtok(line, COIN_DELIM);
+		if(token != NULL)
+		{
+			
+		}
+		else
+		{
+			fprintf(stderr, "Error: coin file not a valid format\n");
+			exit(EXIT_FAILURE);
+		}
+		
+        /** get count from file and assign to new coin **/		
+		token = strtok(NULL, COIN_DELIM);
+		
+		if(token != NULL)
+		{
+			new_coin.count = strtol(token, &end, 0);
+		}
+		else
+		{
+			fprintf(stderr, "Error: coin file not a valid format\n");
+			exit(EXIT_FAILURE);
+		}				
+				
+		/** check if there is more data in the line, and if there is, 
+		  * treat as fatal error 
+		 **/
+		if((strtok(NULL, COIN_DELIM) != NULL))
+		{
+			fprintf(stderr, "Error: coin file not a valid format\n");
+			exit(EXIT_FAILURE);
+		}
+		
+		/** assign new coin struct to system cash_register array **/
+		system -> cash_register[count] = new_coin;		
+		
+		/** increment loop counter **/
+		++count;
 	}
+	
+	/** check if there was a total of NUM_DENOMS entries in coin file **/ 
+	if(count != NUM_DENOMS)
+		{
+			fprintf(stderr, "Error: coin file has incorrect number of " 
+			    "denominations. Please use file of valid format\n");
+			exit(EXIT_FAILURE);
+		}
 	
 	fclose(coin_file);
 	
-	return FALSE;
+	return TRUE;
 }
 
 /** load data from stock file into system struct **/

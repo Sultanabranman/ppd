@@ -26,8 +26,7 @@
 /** Total number of menu options **/
 #define NUM_MENU_CHOICES 9
 
-#define LINELEN 80
-#define EXTRACHARS 2
+
 
 /**
  * represents a menu item to be displayed and executed in the program

@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 #include "ppd_main.h"
-#include "ppd_coins.h"
+#include "ppd_coin.h"
 #include "ppd_stock.h"
 #ifndef PPD_UTILITY
 #define PPD_UTILITY
@@ -24,6 +24,9 @@
  * are going to quit the application.
  **/
 
+#define LINELEN 80
+#define EXTRACHARS 2
+ 
 /**
  * the function to call for buffer clearing. This was discussed extensively
  * for assignment 1
