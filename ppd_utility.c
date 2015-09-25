@@ -51,12 +51,25 @@ const char * stock_name)
  **/
 BOOLEAN system_init(struct ppd_system * system)
 {
-    /*
-     * Please delete this default return value once this function has 
-     * been implemented. Please note that it is convention that until
-     * a function has been implemented it should return FALSE
-     */
-    return FALSE;
+	/** loop counter **/
+	int i;
+	
+	/** creates an empty coin struct initialised to a safe value **/
+	struct coin empty_coin;
+	empty_coin.denom = FIVE_CENTS;
+	empty_coin.count = 0;
+	
+	/** initialises cash_register array to safe values **/
+	for(i = 0; i < NUM_DENOMS; i++)
+	{
+		system -> cash_register[i] = empty_coin;
+	}
+	
+    /** initialises system struct to safe values **/    
+	system -> item_list = NULL;
+	system -> coin_file_name = "";
+	system -> stock_file_name = "";
+    return TRUE;
 }
 
 /**
@@ -65,5 +78,6 @@ BOOLEAN system_init(struct ppd_system * system)
  **/
 void system_free(struct ppd_system * system)
 {
-
+	free(system);
+	return;
 }
