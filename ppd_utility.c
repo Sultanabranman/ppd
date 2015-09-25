@@ -37,12 +37,18 @@ void read_rest_of_line(void)
 BOOLEAN load_data(struct ppd_system * system , const char * coins_name, 
 const char * stock_name)
 {
-    /*
-     * Please delete this default return value once this function has 
-     * been implemented. Please note that it is convention that until
-     * a function has been implemented it should return FALSE
-     */
-    return FALSE;
+    /** load coin data into system struct **/
+	load_coin_data(system, coins_name);
+	
+	/** load stock data into system struct **/
+	load_stock_data(system, stock_name);
+	
+	/** set coin file name **/
+	system -> coin_file_name = coins_name;
+	
+	/** set stock file name **/
+	system -> stock_file_name = stock_name;
+    return TRUE;
 }
 
 /**
@@ -80,4 +86,31 @@ void system_free(struct ppd_system * system)
 {
 	free(system);
 	return;
+}
+
+/** load data from coin file into system struct **/
+BOOLEAN load_coin_data(struct ppd_system * system, const char * coins_name)
+{
+	FILE * coin_file;
+	char * token;
+	struct coin new_coin;
+	
+	coin_file = fopen(coins_name, "r");
+	
+	token = strtok(coin_file, COIN_DELIM);	
+	
+	while(token != NULL)
+	{
+		new_coin.
+	}
+	
+	fclose(coin_file);
+	
+	return FALSE;
+}
+
+/** load data from stock file into system struct **/
+BOOLEAN load_stock_data(struct ppd_system * system, const char * stock_name)
+{
+	return FALSE;
 }

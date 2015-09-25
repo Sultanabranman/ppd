@@ -25,7 +25,7 @@
  * should simply be calling other functions to get the job done.
  **/
 int main(int argc, char **argv)
-{
+{	
     /* validate command line arguments */
 	if(argc != 3)
 	{
@@ -36,15 +36,19 @@ int main(int argc, char **argv)
 			"expected format.\n");
 		return EXIT_FAILURE;
 	}
+	
+	const char * stockfile = argv[STOCKFILE];
+	const char * coinfile = argv[COINSFILE];
 
     /* represents the data structures to manage the system */
     struct ppd_system system;
 	struct menu_item menu[NUM_MENU_CHOICES];
-
+	
     /* init the system */
 	system_init(&system);
 
     /* load data */
+	load_data(&system, coinfile, stockfile);
 
     /* test if everything has been initialised correctly */
 
@@ -61,5 +65,6 @@ int main(int argc, char **argv)
     /* make sure you always free all memory and close all files 
      * before you exit the program
      */
+	 
     return EXIT_SUCCESS;
 }

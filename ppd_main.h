@@ -21,6 +21,9 @@
  * in the header files included. You might also want to insert here
  * any functions for handling and validation of command line arguments
  **/
+ 
+ #define STOCKFILE 1
+ #define COINSFILE 2
 
 /**
  * datatype to represent a boolean value within the system

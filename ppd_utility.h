@@ -11,6 +11,8 @@
 
 #include <stdio.h>
 #include "ppd_main.h"
+#include "ppd_coins.h"
+#include "ppd_stock.h"
 #ifndef PPD_UTILITY
 #define PPD_UTILITY
 /**
@@ -61,4 +63,10 @@ BOOLEAN system_init(struct ppd_system *);
  * memory addresses.
  **/
 void system_free(struct ppd_system *);
+
+/** load data from coin file into system struct **/
+BOOLEAN load_coin_data(struct ppd_system *, const char *);
+
+/** load data from stock file into system struct **/
+BOOLEAN load_stock_data(struct ppd_system *, const char *);
 #endif
