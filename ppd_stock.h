@@ -54,6 +54,12 @@
  **/
 #define NUM_DENOMS 8
 
+#define STOCK_DELIM "|"
+
+#define PRICE_DELIM "."
+
+#define MAX_LINE_LEN 300
+
 /**
  * a structure to represent a price. One of the problems with the floating
  * point formats in C like float and double is that they have minor issues

@@ -17,6 +17,11 @@
 #ifndef PPD_COIN
 #define PPD_COIN
 #define COIN_DELIM ","
+
+/** valid range of cents **/
+#define MIN_CENTS 0
+#define MAX_CENTS 99
+
 struct ppd_system;
 /**
  * enumeration representing the various types of currency available in

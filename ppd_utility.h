@@ -26,6 +26,9 @@
 
 #define LINELEN 80
 #define EXTRACHARS 2
+
+/** the first character in a string **/
+#define FIRSTCHAR 0
  
 /**
  * the function to call for buffer clearing. This was discussed extensively
@@ -72,4 +75,7 @@ BOOLEAN load_coin_data(struct ppd_system *, const char *);
 
 /** load data from stock file into system struct **/
 BOOLEAN load_stock_data(struct ppd_system *, const char *);
+
+/** tokenise price data and load into stock item struct **/
+BOOLEAN load_price_data(struct ppd_stock *, char *);
 #endif

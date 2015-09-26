@@ -48,7 +48,24 @@ int main(int argc, char **argv)
 	system_init(&system);
 
     /* load data */
-	load_data(&system, coinfile, stockfile);
+	
+	switch(load_data(&system, coinfile, stockfile))
+	{
+		/** fatal error occured when loading data from files **/
+		case FALSE:
+		{
+			fprintf(stderr, "Correct arguments are:\n"
+			"\t./ppd <stockfile> <coinfile>\n"
+			"Where <stockfile> and <coinfile> are two valid files in the "
+			"expected format.\n");
+			return EXIT_FAILURE;
+		}
+		/** continue as normal **/
+		case TRUE:
+		{
+			;
+		}		
+	}
 
     /* test if everything has been initialised correctly */
 
