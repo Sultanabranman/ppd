@@ -29,6 +29,9 @@
 
 /** the first character in a string **/
 #define FIRSTCHAR 0
+
+/** Max length of a line in coin file **/
+#define COIN_LINELEN 10
  
 /**
  * the function to call for buffer clearing. This was discussed extensively

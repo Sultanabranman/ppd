@@ -14,6 +14,7 @@
  * system. You should declare function prototypes for managing coins here
  * and implement them in ppd_coin.c
  **/
+#include "ppd_main.h"
 #ifndef PPD_COIN
 #define PPD_COIN
 #define COIN_DELIM ","
@@ -48,5 +49,7 @@ struct coin
      **/
     unsigned count;
 };
+
+BOOLEAN initialise_cash_register(struct ppd_system *);
 
 #endif

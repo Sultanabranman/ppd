@@ -11,8 +11,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "ppd_stock.h"
-#include "ppd_coin.h"
+
 #ifndef PPD_MAIN
 #define PPD_MAIN
 /**

@@ -83,22 +83,11 @@ const char * stock_name)
  **/
 BOOLEAN system_init(struct ppd_system * system)
 {
-	/** loop counter **/
-	int i;
+	initialise_cash_register(system);
 	
-	/** creates an empty coin struct initialised to a safe value **/
-	struct coin empty_coin;
-	empty_coin.denom = 0;
-	empty_coin.count = 0;
+	initialise_stock_list(system);	
 	
-	/** initialises cash_register array to safe values **/
-	for(i = 0; i < NUM_DENOMS; i++)
-	{
-		system -> cash_register[i] = empty_coin;
-	}
-	
-    /** initialises system struct to safe values **/    
-	system -> item_list = NULL;
+    /** initialises system struct to safe values **/ 	
 	system -> coin_file_name = "";
 	system -> stock_file_name = "";
     return TRUE;
@@ -122,7 +111,7 @@ BOOLEAN load_coin_data(struct ppd_system * system, const char * coins_name)
 	char * end;
 	struct coin new_coin;
 	int count = 0;	
-	char line[LINELEN];
+	char line[COIN_LINELEN];
 	
 	/** open coin file for reading **/
 	coin_file = fopen(coins_name, "r");
@@ -137,8 +126,8 @@ BOOLEAN load_coin_data(struct ppd_system * system, const char * coins_name)
 	/** run through coin file line by line and store data in 
 	  * ppd_coin struct 
 	 **/
-	while(fgets(line, LINELEN + EXTRACHARS, coin_file))
-	{
+	while(fgets(line, COIN_LINELEN + EXTRACHARS, coin_file))
+	{		
 		/** get denomination from file **/ 
 		token = strtok(line, COIN_DELIM);
 		
@@ -209,6 +198,7 @@ BOOLEAN load_stock_data(struct ppd_system * system, const char * stock_name)
 	struct ppd_stock new_stock_item;
 	int on_hand = 0;
 	
+	
 	/** open stock file for reading **/
 	stock_file = fopen(stock_name, "r");
 	
@@ -223,7 +213,7 @@ BOOLEAN load_stock_data(struct ppd_system * system, const char * stock_name)
 	  * ppd_stock struct 
 	 **/
 	while(fgets(line, MAX_LINE_LEN + EXTRACHARS, stock_file))
-	{
+	{		
 		/** get id from stock file **/
 		token = strtok(line, STOCK_DELIM);		
 		/** check if id token is valid **/
@@ -323,9 +313,12 @@ BOOLEAN load_stock_data(struct ppd_system * system, const char * stock_name)
 		    {
 		    	;
 		    }		
-	    }
+	    }	
 		
-		printf("%s, %s , %s, $%d.%d, %d\n", new_stock_item.id, new_stock_item.name, new_stock_item.desc, new_stock_item.price.dollars, new_stock_item.price.cents, new_stock_item.on_hand);
+		/** add new stock item to system item_list **/
+		add_new_node(system, new_stock_item);
+		
+			
 	}
 	
 	fclose(stock_file);

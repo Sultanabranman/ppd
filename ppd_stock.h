@@ -13,6 +13,7 @@
 #include <limits.h>
 #include <ctype.h>
 #include "ppd_coin.h"
+#include "ppd_main.h"
 #ifndef PPD_STOCK
 #define PPD_STOCK
 
@@ -162,6 +163,9 @@ struct ppd_system
     const char * stock_file_name;
 };
 
+BOOLEAN initialise_stock_list(struct ppd_system *);
+
+BOOLEAN add_new_node(struct ppd_system *, struct ppd_stock);
 #endif
 
 
