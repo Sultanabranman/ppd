@@ -28,12 +28,36 @@
  **/
 BOOLEAN display_items(struct ppd_system * system)
 {
-    /*
-     * Please delete this default return value once this function has 
-     * been implemented. Please note that it is convention that until
-     * a function has been implemented it should return FALSE
-     */
-    return FALSE;
+	struct ppd_node * current = system->item_list->head;
+	char * id;
+	char * name;
+	int available = 0;
+	int dollars = 0;
+	int cents = 0;
+	
+	/** print out formatted title information to console **/
+    printf("Items Menu\n");
+	printf("----------\n");
+	printf("%-5s |%-40s |%-10s |%s\n", "ID,", "Name", "Available", "Price");
+	printf("------------------------------------------------------------------"
+		"-\n");
+	
+	/** print stock data for each item in system item_list **/
+	while(current -> next != NULL)
+	{	
+		id = current->data->id;
+		name = current->data->name;
+		available = current->data->on_hand;
+		dollars = current->data->price.dollars;
+		cents = current->data->price.cents;
+		
+		printf("%-5s |%-40s |%-10d |$ %d.%-2d\n", id , name, available,
+			dollars, cents);
+		
+		/**	set current to point to next node in linked list **/	
+		current = current->next;
+	}
+    return TRUE;
 }
 
 /**
