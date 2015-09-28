@@ -166,6 +166,10 @@ struct ppd_system
 BOOLEAN initialise_stock_list(struct ppd_system *);
 
 BOOLEAN add_new_node(struct ppd_system *, struct ppd_stock);
+
+BOOLEAN add_to_end_of_list(struct ppd_node *, struct ppd_stock *);
+
+BOOLEAN remove_node(struct ppd_system *, char *);
 #endif
 
 

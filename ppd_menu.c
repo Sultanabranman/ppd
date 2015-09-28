@@ -81,7 +81,7 @@ enum menu_input display_menu(struct menu_item* menu)
 			printf("Main Menu:\n");
 		}
 		/** If it is the fourth line, print text before menu item **/
-		if(i == 4)
+		if(i == ADMIN_MENU)
 		{
 			printf("Administrator-Only Menu:\n");
 		}
@@ -90,7 +90,8 @@ enum menu_input display_menu(struct menu_item* menu)
 	}
 	printf("Select your option (1-9):\n");
 	/** Get user input and check if it is blank **/
-	if((fgets(line, LINELEN + EXTRACHARS, stdin)) == NULL)
+	fgets(line, LINELEN + EXTRACHARS, stdin);
+	if(line[0] == '\n')
 	{
 		fprintf(stderr, "Error: Input was blank. Please try again\n");
 		return INVALID;
@@ -120,7 +121,7 @@ enum menu_input display_menu(struct menu_item* menu)
 	--input;
 	
 	/** check if input is within valid range **/
-	if(input < 0 || input >= INVALID)
+	if(input >= INVALID)
 	{
 		fprintf(stderr, "Error: Not a valid selection\n");
 		return INVALID;

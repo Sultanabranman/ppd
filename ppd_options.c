@@ -112,11 +112,54 @@ BOOLEAN add_item(struct ppd_system * system)
  **/
 BOOLEAN remove_item(struct ppd_system * system)
 {
-    /*
-     * Please delete this default return value once this function has 
-     * been implemented. Please note that it is convention that until
-     * a function has been implemented it should return FALSE
-     */
+	char id[IDLEN + EXTRACHARS];
+	BOOLEAN valid = FALSE;
+	
+	/** while input is not valid **/
+	while(valid != TRUE)
+	{
+		printf("Enter the item id of the item to remove from the menu: ");
+		/** get user input and check if blank**/	
+		fgets(id, IDLEN + EXTRACHARS, stdin);
+	    if(id[0] == '\n')
+	    {
+		    printf("Operation cancelled at the user's request.\n");
+		    return FALSE;
+	    }
+		
+		/** check if input was too long **/
+	    if(id[strlen(id)-1] != '\n')
+	    {
+		    read_rest_of_line();
+		    fprintf(stderr, "Error: line entered was too long. " 
+			    "Please try again\n");
+		    continue;
+	    }
+		
+		/** input was valid **/
+		valid = TRUE;
+	    
+	}
+	
+	/** remove \n from user input **/
+	    id[strlen(id)-1] = 0;
+	
+	/** search item_list for id and if match found remove from list **/
+    switch(remove_node(system, id))
+	{
+		/** if match was found **/
+		case TRUE:
+		{
+			return TRUE;
+		}
+		/** if no match found **/
+		case FALSE:
+		{
+			fprintf(stderr, "Error: desired id was not found.\n");
+			return FALSE;
+		}
+	}
+	/** if for some reason previous code is skipped **/
     return FALSE;
 }
 

@@ -41,6 +41,7 @@ int main(int argc, char **argv)
 	
 	const char * stockfile = argv[STOCKFILE];
 	const char * coinfile = argv[COINSFILE];
+	enum menu_input input;
 
     /* represents the data structures to manage the system */
     struct ppd_system system;
@@ -75,10 +76,21 @@ int main(int argc, char **argv)
 	init_menu(menu);
 
     /* loop, asking for options from the menu */
-	display_menu(menu);
+	while(TRUE)
+	{
+		input = display_menu(menu);
+		
+		if(input == INVALID)
+		{
+			continue;
+		}
+		
+		menu[input].function(&system);
+	}
+	
 
     /* run each option selected */
-	display_items(&system);
+	
 
     /* until the user quits */
 

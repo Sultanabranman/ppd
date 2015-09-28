@@ -26,6 +26,9 @@
 /** Total number of menu options **/
 #define NUM_MENU_CHOICES 9
 
+/** start of admin menu **/
+#define ADMIN_MENU 3
+
 
 
 /**

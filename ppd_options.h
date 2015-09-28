@@ -11,6 +11,7 @@
 
 #include "ppd_main.h"
 #include "ppd_stock.h"
+#include "ppd_utility.h"
 
 /**
  * @file ppd_options.h declares all functions to implement the menu
