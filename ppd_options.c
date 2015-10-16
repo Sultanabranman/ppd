@@ -51,7 +51,7 @@ BOOLEAN display_items(struct ppd_system * system)
 		dollars = current->data->price.dollars;
 		cents = current->data->price.cents;
 		
-		printf("%-5s |%-40s |%-10d |$ %d.%-2d\n", id , name, available,
+		printf("%-5s |%-40s |%-10d |$ %d.%02d\n", id , name, available,
 			dollars, cents);
 		
 		/**	set current to point to next node in linked list **/	
@@ -97,12 +97,105 @@ BOOLEAN save_system(struct ppd_system * system)
  **/
 BOOLEAN add_item(struct ppd_system * system)
 {
-    /*
-     * Please delete this default return value once this function has 
-     * been implemented. Please note that it is convention that until
-     * a function has been implemented it should return FALSE
-     */
-    return FALSE;
+    static int id_num = 0;
+	char id[IDLEN + EXTRACHARS];
+	char name[NAMELEN + EXTRACHARS];
+	char desc[DESCLEN + EXTRACHARS];
+	char price[PRICELEN + EXTRACHARS];
+	struct ppd_stock new_item;	
+	BOOLEAN valid = FALSE;
+	
+	if(id_num == 0)
+	{
+		id_num = get_latest_id(system);
+	}
+	
+	id_num++;
+	
+	sprintf(id, "I%04d", id_num);
+	
+	strcpy(new_item.id, id);
+	
+	printf("Item id will be %s\n", id);
+	
+	/** get item name **/
+	while(valid != TRUE)
+	{
+		printf("Enter the item name: ");
+		
+        if(get_input(name, NAMELEN) == FALSE)
+		{
+			continue;
+		}
+        if(name[0] == '\n')	
+		{
+			printf("Operation cancelled at the user's request.\n");
+		    return FALSE;
+		}		
+		
+		/** input was valid **/
+		valid = TRUE;
+
+		/** copy user input into new item struct **/
+		strcpy(new_item.name, name);
+	}		
+	/** reset valid to false **/
+	valid = FALSE;
+	
+	/** get item description **/
+	while(valid != TRUE)
+	{
+		printf("Enter the item description: ");
+		if(get_input(desc, DESCLEN) == FALSE)
+		{
+			continue;
+		}
+	    if(desc[0] == '\n')
+	    {
+		    printf("Operation cancelled at the user's request.\n");
+		    return FALSE;
+	    }		
+		
+		/** input was valid **/
+		valid = TRUE;
+		
+        /** copy user input into new item struct **/
+		strcpy(new_item.desc, desc);	    
+	}	
+	
+	/** reset valid to false **/
+    valid = FALSE;	
+	
+	/** get item price **/
+	while(valid != TRUE)
+	{
+		printf("Enter the item price: ");
+		if(get_input(price, PRICELEN) == FALSE)
+		{
+			continue;
+		}
+	    if(price[0] == '\n')
+	    {
+		    printf("Operation cancelled at the user's request.\n");
+		    return FALSE;
+	    }		
+		/** validate price data **/
+		if(load_price_data(&new_item, price) == FALSE)
+		{
+			fprintf(stderr, "Error: Price is not valid, please try again\n");
+			continue;
+		}		
+		
+		/** input was valid **/
+		valid = TRUE;	    
+	}	
+	/** set new item stock level to default **/
+	new_item.on_hand = DEFAULT_STOCK_LEVEL;
+	
+	/** add new item to item list **/
+	add_new_node(system, new_item);
+	
+    return TRUE;
 }
 
 /**

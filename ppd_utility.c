@@ -306,6 +306,8 @@ BOOLEAN load_stock_data(struct ppd_system * system, const char * stock_name)
 		    /** return false **/
 		    case FALSE:
 		    {
+				fprintf(stderr, "Error loading stock file: the price token "
+		        "is not valid.\n");
 		    	return FALSE;
 		    }
 		    /** continue as normal **/
@@ -337,17 +339,14 @@ BOOLEAN load_price_data(struct ppd_stock * new_stock_item, char * token)
 	price_token = strtok(token, PRICE_DELIM);
 	/** check if dollar token exists **/
 	if(price_token == NULL)
-	{
-		fprintf(stderr, "Error loading stock file: price token not valid\n");
+	{		
 		return FALSE;
 	}
 	/** convert price token to long **/
 	dollars = strtol(price_token, &end, 0);
 	/** check if dollar data is valid **/
 	if(*end)
-	{
-		fprintf(stderr, "Error loading stock file: the price token "
-		    "is not valid.\n");
+	{		
 		return FALSE;
 	}
 	/** assign dollar data to new_stock_item struct **/
@@ -357,17 +356,14 @@ BOOLEAN load_price_data(struct ppd_stock * new_stock_item, char * token)
 	price_token = strtok(NULL, PRICE_DELIM);
 	/** check if price token exists **/
 	if(price_token == NULL)
-	{
-		fprintf(stderr, "Error loading stock file: price token not valid\n");
+	{		
 		return FALSE;
 	}
 	/** convert price token to long **/
 	cents = strtol(price_token, &end, 0); 
 	/** check if cent data is valid **/
 	if(*end || cents < MIN_CENTS || cents > MAX_CENTS)
-	{
-		fprintf(stderr, "Error loading stock file: the price token "
-		   "is not valid.\n");
+	{		
 		return FALSE;
 	}
 	/** assign cent data to new_stock_item struct **/
@@ -377,11 +373,31 @@ BOOLEAN load_price_data(struct ppd_stock * new_stock_item, char * token)
 	  * treat as fatal error 
 	 **/
 	if((strtok(NULL, STOCK_DELIM) != NULL))
-	{
-		fprintf(stderr, "Error loading stock file: the price token "
-		   "is not valid.\n");
+	{		
 		return FALSE;
 	}
+	
+	return TRUE;
+}
+
+BOOLEAN get_input(char * input, int length)
+{	
+	fgets(input, length + EXTRACHARS, stdin);
+	
+	if(input[0] == '\n')
+	{
+		return TRUE;
+	}
+	
+	if(input[strlen(input) - 1] != '\n')
+	{
+		read_rest_of_line();
+		fprintf(stderr, "Error: line entered was too long. " 
+			    "Please try again\n");
+		return FALSE;
+	}
+	
+	input[strlen(input) - 1] = 0;
 	
 	return TRUE;
 }

@@ -28,6 +28,15 @@
  **/
 int main(int argc, char **argv)
 {	
+	/* represents the data structures to manage the system */
+    struct ppd_system system;
+	struct menu_item menu[NUM_MENU_CHOICES];
+	
+	const char * stockfile = NULL;
+	const char * coinfile = NULL;
+	enum menu_input input;
+	
+	
     /* validate command line arguments */
 	if(argc != 3)
 	{
@@ -39,13 +48,8 @@ int main(int argc, char **argv)
 		return EXIT_FAILURE;
 	}
 	
-	const char * stockfile = argv[STOCKFILE];
-	const char * coinfile = argv[COINSFILE];
-	enum menu_input input;
-
-    /* represents the data structures to manage the system */
-    struct ppd_system system;
-	struct menu_item menu[NUM_MENU_CHOICES];
+	stockfile = argv[STOCKFILE];
+	coinfile = argv[COINSFILE];   
 	
     /* init the system */
 	system_init(&system);

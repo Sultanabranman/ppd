@@ -61,6 +61,8 @@
 
 #define MAX_LINE_LEN 300
 
+#define PRICELEN 5
+
 /**
  * a structure to represent a price. One of the problems with the floating
  * point formats in C like float and double is that they have minor issues
@@ -170,6 +172,8 @@ BOOLEAN add_new_node(struct ppd_system *, struct ppd_stock);
 BOOLEAN add_to_end_of_list(struct ppd_node *, struct ppd_stock *);
 
 BOOLEAN remove_node(struct ppd_system *, char *);
+/** searches item list for highest id **/
+int get_latest_id(struct ppd_system *);
 #endif
 
 

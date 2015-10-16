@@ -217,3 +217,32 @@ BOOLEAN remove_node(struct ppd_system * system, char * id)
 	return FALSE;
 }
 
+int get_latest_id(struct ppd_system * system)
+{
+	int i;	
+	char * highest_id = system->item_list->head->data->id;	
+	char id_num[4] = {0};
+	char * end;
+	int id = 0;
+	
+	struct ppd_node * current = system->item_list->head;
+	
+	while(current->next != NULL)
+	{
+		if(strcmp(current->data->id, highest_id) > 0)
+		{
+			highest_id = current->data->id;
+		}
+		current = current->next;
+	}
+	
+	for(i = 1; i < (strlen(highest_id)); i++)
+	{
+		id_num[i-1] = *(highest_id + i);
+	} 
+	
+	id = strtol(id_num, &end, 0); 
+			
+	return id;
+}
+

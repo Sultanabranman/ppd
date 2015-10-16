@@ -81,4 +81,7 @@ BOOLEAN load_stock_data(struct ppd_system *, const char *);
 
 /** tokenise price data and load into stock item struct **/
 BOOLEAN load_price_data(struct ppd_stock *, char *);
+
+/** get user input and validate it **/
+BOOLEAN get_input(char *, int);
 #endif
