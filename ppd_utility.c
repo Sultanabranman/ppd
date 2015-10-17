@@ -99,7 +99,30 @@ BOOLEAN system_init(struct ppd_system * system)
  **/
 void system_free(struct ppd_system * system)
 {
-	free(system);
+	struct ppd_node * current = system->item_list->head;
+	struct ppd_node * next = NULL;
+	
+	/** free item list nodes **/
+	while(current->next != NULL)
+	{
+		/** free data **/
+		free(current->data);
+		
+		next = current->next;
+		
+		/** free current node **/
+		free(current);
+		
+		/** move to next node **/
+		current = next;		
+	}
+	
+	/** free end of list **/
+	free(current);
+	
+	/** free item list **/
+	free(system->item_list);	
+	
 	return;
 }
 
@@ -140,6 +163,7 @@ BOOLEAN load_coin_data(struct ppd_system * system, const char * coins_name)
 		}
 		
 		/** assign denomination to new coin struct **/
+		new_coin.denom = convert_denom(token);
 		
 		
         /** get count from file **/ 	
