@@ -86,7 +86,7 @@ enum menu_input display_menu(struct menu_item* menu)
 			printf("Administrator-Only Menu:\n");
 		}
 		/** Print item number and menu item name **/
-		printf("   %d: %s\n", i+1, menu[i].name);
+		printf("\t%d: %s\n", i+1, menu[i].name);
 	}
 	printf("Select your option (1-9):\n");
 	/** Get user input and check if it is blank **/

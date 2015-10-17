@@ -67,11 +67,37 @@ BOOLEAN display_items(struct ppd_system * system)
  **/
 BOOLEAN purchase_item(struct ppd_system * system)
 {
-    /*
-     * Please delete this default return value once this function has 
-     * been implemented. Please note that it is convention that until
-     * a function has been implemented it should return FALSE
-     */
+	char id[IDLEN+EXTRACHARS];
+	
+    printf("Purchase Item\n");
+	printf("-------------\n");
+	printf("Please enter the id of the item you wish to purchase: ");
+	
+	/** get id **/
+	get_input(id, IDLEN + EXTRACHARS);
+	
+	/** search item_list for id **/
+	
+	/** loop until price has been filled **/
+	
+	/** store denominations currently entered into dynamic array **/
+	
+	/** give any change required **/
+	
+	/** deduct item from stock **/
+	
+	/** deduct coins from register **/
+	
+	/** add coins to register **/
+	
+	
+	
+	printf("You have selected %s - %s. This will cost you $%d.%d");
+	printf("Please hand over the money - type in the value of each note/coin in cents.\n");
+	printf("Press enter or ctrl-d on a new line to cancel this purchase:\n");
+	printf("You still need to give us $%d.%d: ");
+	printf("Here is your %s and your change of $%d.%d: ");
+	printf("Please come again soon\n");
     return FALSE;
 }
 
@@ -82,12 +108,105 @@ BOOLEAN purchase_item(struct ppd_system * system)
  **/
 BOOLEAN save_system(struct ppd_system * system)
 {
-    /*
-     * Please delete this default return value once this function has 
-     * been implemented. Please note that it is convention that until
-     * a function has been implemented it should return FALSE
-     */
-    return FALSE;
+    FILE * coin_file;
+	FILE * stock_file;
+	int i;
+	enum denomination j;
+	
+	struct ppd_node * current = system->item_list->head;
+		
+	/** open coin file in write mode **/
+	coin_file = fopen(system->coin_file_name, "w");
+	
+	/** if coin file failed to open **/
+	if(coin_file == NULL)
+	{
+		fprintf(stderr, "Error: coin file failed to open.\n");
+		return FALSE;
+	}	
+	
+	for(i = 0; i < NUM_DENOMS; i++)
+	{
+		for(j = FIVE_CENTS; j <= TEN_DOLLARS; j++)
+		{
+			if(system->cash_register[i].denom == FIVE_CENTS 
+				&& j == FIVE_CENTS)
+			{
+				fprintf(coin_file, "%d,%d\n", 5, system->cash_register[i].count);
+			}
+			else if(system->cash_register[i].denom == TEN_CENTS 
+				&& j == TEN_CENTS)
+			{
+				fprintf(coin_file, "%d,%d\n", 10, system->cash_register[i].count);
+			}
+			else if(system->cash_register[i].denom == TWENTY_CENTS 
+				&& j == TWENTY_CENTS)
+			{
+				fprintf(coin_file, "%d,%d\n", 20, system->cash_register[i].count);
+			}
+			else if(system->cash_register[i].denom == FIFTY_CENTS 
+				&& j == FIFTY_CENTS)
+			{
+				fprintf(coin_file, "%d,%d\n", 50, system->cash_register[i].count);
+			}
+			else if(system->cash_register[i].denom == ONE_DOLLAR 
+				&& j == ONE_DOLLAR)
+			{
+				fprintf(coin_file, "%d,%d\n", 100, system->cash_register[i]
+					.count);
+			}
+			else if(system->cash_register[i].denom == TWO_DOLLARS 
+				&& j == TWO_DOLLARS)
+			{
+				fprintf(coin_file, "%d,%d\n", 200, system->cash_register[i]
+					.count);
+			}
+			else if(system->cash_register[i].denom == FIVE_DOLLARS 
+				&& j== FIVE_DOLLARS)
+			{
+				fprintf(coin_file, "%d,%d\n", 500, system->cash_register[i]
+					.count);
+			}
+			else if(system->cash_register[i].denom == TEN_DOLLARS 
+				&& j == TEN_DOLLARS)
+			{
+				fprintf(coin_file, "%d,%d\n", 1000, system->cash_register[i]
+					.count);
+			}
+		}
+	}
+	
+	/** open stock file in write mode **/
+	stock_file = fopen(system->stock_file_name, "w");
+	
+	/** if stock file failed to open **/
+	if(stock_file == NULL)
+	{
+		fprintf(stderr, "Error: stock file failed to open.\n");
+		return FALSE;
+	}
+	
+	/** store all stock list data into stock file **/
+	while(current->next != NULL)
+	{
+		fprintf(stock_file, "%s|%s|%s|%d.%d|%d\n", current->data->id,
+			current->data->name, current->data->desc, current->data->price
+			.dollars, current->data->price.cents, current->data->on_hand);
+		
+		current = current->next;
+	}
+	
+	/** close both files **/
+	fclose(coin_file);
+	fclose(stock_file);
+	
+	/** free all malloc'ed memory **/
+	system_free(system);
+	
+	/** close the program **/
+	exit(EXIT_SUCCESS);	
+	
+	return FALSE;
 }
 
 /**
@@ -110,10 +229,13 @@ BOOLEAN add_item(struct ppd_system * system)
 		id_num = get_latest_id(system);
 	}
 	
+	/** increment id **/
 	id_num++;
 	
+	/** append I to start of id **/
 	sprintf(id, "I%04d", id_num);
 	
+	/** store id in new item struct **/
 	strcpy(new_item.id, id);
 	
 	printf("Item id will be %s\n", id);
@@ -298,11 +420,61 @@ BOOLEAN reset_coins(struct ppd_system * system)
  **/
 BOOLEAN display_coins(struct ppd_system * system)
 {
+	/** loop counters **/
+	int i;
+	enum denomination j;
+	
     printf("Coins Summary\n");
 	printf("-------------\n");
-	printf("%-13s | %-5s\n", "Denomination", "Count");
-	printf("--------------------\n");
+	printf("%-13s | %10s\n", "Denomination", "Count");
+	printf("--------------------------\n");
 	
+	for(j = FIVE_CENTS; j <= TEN_DOLLARS; j++)
+	{
+		for(i = 0; i < NUM_DENOMS; i++)
+		{
+			if(system->cash_register[i].denom == FIVE_CENTS 
+				&& j == FIVE_CENTS)
+			{
+				printf("%-13s | %10d\n", "5 Cents", system->cash_register[i].count);
+			}
+			else if(system->cash_register[i].denom == TEN_CENTS 
+				&& j == TEN_CENTS)
+			{
+				printf("%-13s | %10d\n", "10 Cents", system->cash_register[i].count);
+			}
+			else if(system->cash_register[i].denom == TWENTY_CENTS 
+				&& j == TWENTY_CENTS)
+			{
+				printf("%-13s | %10d\n", "20 Cents", system->cash_register[i].count);
+			}
+			else if(system->cash_register[i].denom == FIFTY_CENTS 
+				&& j == FIFTY_CENTS)
+			{
+				printf("%-13s | %10d\n", "50 Cents", system->cash_register[i].count);
+			}
+			else if(system->cash_register[i].denom == ONE_DOLLAR 
+				&& j == ONE_DOLLAR)
+			{
+				printf("%-13s | %10d\n", "1 Dollar", system->cash_register[i].count);
+			}
+			else if(system->cash_register[i].denom == TWO_DOLLARS 
+				&& j == TWO_DOLLARS)
+			{
+				printf("%-13s | %10d\n", "2 Dollars", system->cash_register[i].count);
+			}
+			else if(system->cash_register[i].denom == FIVE_DOLLARS 
+				&& j== FIVE_DOLLARS)
+			{
+				printf("%-13s | %10d\n", "5 Dollars", system->cash_register[i].count);
+			}
+			else if(system->cash_register[i].denom == TEN_DOLLARS 
+				&& j == TEN_DOLLARS)
+			{
+				printf("%-13s | %10d\n", "10 Dollars", system->cash_register[i].count);
+			}
+		}		
+	}	
 	
     return TRUE;
 }
