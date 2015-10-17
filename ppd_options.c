@@ -263,12 +263,16 @@ BOOLEAN remove_item(struct ppd_system * system)
  **/
 BOOLEAN reset_stock(struct ppd_system * system)
 {
-    /*
-     * Please delete this default return value once this function has 
-     * been implemented. Please note that it is convention that until
-     * a function has been implemented it should return FALSE
-     */
-    return FALSE;
+	struct ppd_node * current = system->item_list->head;
+	
+	/** Set all stock items to default stock level **/
+	while(current->next != NULL)
+	{
+		current->data->on_hand = DEFAULT_STOCK_LEVEL;
+		current = current->next;
+	}
+    
+    return TRUE;
 }
 
 /**
@@ -278,12 +282,13 @@ BOOLEAN reset_stock(struct ppd_system * system)
  **/
 BOOLEAN reset_coins(struct ppd_system * system)
 {
-    /*
-     * Please delete this default return value once this function has 
-     * been implemented. Please note that it is convention that until
-     * a function has been implemented it should return FALSE
-     */
-    return FALSE;
+    int i;
+	
+	for(i = 0; i < NUM_DENOMS; i++)
+	{
+		system->cash_register[i].count = DEFAULT_COIN_COUNT;
+	}
+    return TRUE;
 }
 
 /**
@@ -293,16 +298,22 @@ BOOLEAN reset_coins(struct ppd_system * system)
  **/
 BOOLEAN display_coins(struct ppd_system * system)
 {
-    /*
-     * Please delete this default return value once this function has 
-     * been implemented. Please note that it is convention that until
-     * a function has been implemented it should return FALSE
-     */
-    return FALSE;
+    printf("Coins Summary\n");
+	printf("-------------\n");
+	printf("%-13s | %-5s\n", "Denomination", "Count");
+	printf("--------------------\n");
+	
+	
+    return TRUE;
 }
 
 BOOLEAN abort_program(struct ppd_system * system)
 {
-	/* code to free memory and close program without saving */
+	/** free system memory **/
+	system_free(system);
+	
+	/** exit program **/
+	exit(EXIT_SUCCESS);
+	
 	return FALSE;
 }
