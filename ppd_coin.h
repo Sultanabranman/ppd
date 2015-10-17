@@ -52,4 +52,7 @@ struct coin
 
 BOOLEAN initialise_cash_register(struct ppd_system *);
 
+/** convert the integer to denomination **/
+enum denomination convert_denom(char *);
+
 #endif

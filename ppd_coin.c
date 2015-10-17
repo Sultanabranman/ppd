@@ -32,3 +32,36 @@ BOOLEAN initialise_cash_register(struct ppd_system * system)
 	}
 	return TRUE;
 }
+
+enum denomination convert_denom(char * token)
+{
+	/** array to match denomination to value **/
+	const int denom_value[NUM_DENOMS] = {5, 10, 20, 50, 100, 200, 500, 1000};
+	/** loop counter **/
+	enum denomination i;
+	char * end;
+	int value = 0;
+	
+	value = strtol(token, &end, 0);
+	
+	/** if extra data is found in token **/
+	if(*end)
+	{
+		fprintf(stderr, "Error loading coin file: denom token "
+			    "is not valid\n");
+		exit(EXIT_FAILURE);
+	}
+	
+	for(i = FIVE_CENTS; i <= TEN_DOLLARS; ++i)
+	{
+		if(value == denom_value[i])
+		{
+			return i;
+		}
+	}
+	
+	/** if matching value not found **/
+	fprintf(stderr, "Error loading coin file: denom token "
+			    "is not valid\n");
+	exit(EXIT_FAILURE);	
+}
