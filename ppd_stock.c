@@ -246,3 +246,55 @@ int get_latest_id(struct ppd_system * system)
 	return id;
 }
 
+BOOLEAN search_for_id(struct ppd_system * system, char * id)
+{
+	struct ppd_node * current = system->item_list->head;
+	
+	/** search for entered id **/
+	while(current->next != NULL)
+	{
+		if((strcmp(current->data->id, id)) == 0)
+		{			
+			return TRUE;
+		}
+		
+		current = current->next;
+	}
+	
+	return FALSE;
+}
+
+struct ppd_stock * get_selected_item(struct ppd_system * system, char * id)
+{
+	struct ppd_node * current = system->item_list->head;
+	
+	/** search for entered id **/
+	while(current->next != NULL)
+	{
+		if((strcmp(current->data->id, id)) == 0)
+		{			
+			return current->data;
+		}
+		
+		current = current->next;
+	}
+	
+	return NULL;
+}
+
+void deduct_from_stock(char * id, struct ppd_system * system)
+{
+	struct ppd_node * current = system->item_list->head;
+	
+	while(current->next != NULL)
+	{
+		if((strcmp(current->data->id, id)) == 0)
+		{			
+			current->data->on_hand--;
+			return;
+		}
+		
+		current = current->next;
+	}
+}
+

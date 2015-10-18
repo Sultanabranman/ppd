@@ -162,6 +162,16 @@ BOOLEAN load_coin_data(struct ppd_system * system, const char * coins_name)
 			return FALSE;
 		}
 		
+		token = strtol(token, &end, 0);
+		
+		/** if extra data is found in token **/
+	    if(*end)
+	    {
+		    fprintf(stderr, "Error loading coin file: denom token "
+			    "is not valid\n");
+		    exit(EXIT_FAILURE);
+	    }
+		
 		/** assign denomination to new coin struct **/
 		new_coin.denom = convert_denom(token);
 		
@@ -302,7 +312,7 @@ BOOLEAN load_stock_data(struct ppd_system * system, const char * stock_name)
 		/** convert on_hand data to long **/
 		on_hand = strtol(token, &end, 0);		
 		/** check if on_hand data is valid **/
-		if(*end)
+		if(*end || on_hand < 0)
 		{
 			fprintf(stderr, "Error loading stock file: the on_hand token "
 			    "is not valid.\n");
@@ -369,7 +379,7 @@ BOOLEAN load_price_data(struct ppd_stock * new_stock_item, char * token)
 	/** convert price token to long **/
 	dollars = strtol(price_token, &end, 0);
 	/** check if dollar data is valid **/
-	if(*end)
+	if(*end || dollars > MAX_DOLLARS)
 	{		
 		return FALSE;
 	}
@@ -386,7 +396,7 @@ BOOLEAN load_price_data(struct ppd_stock * new_stock_item, char * token)
 	/** convert price token to long **/
 	cents = strtol(price_token, &end, 0); 
 	/** check if cent data is valid **/
-	if(*end || cents < MIN_CENTS || cents > MAX_CENTS)
+	if(*end || cents < MIN_CENTS || cents > MAX_CENTS || cents % 5 != 0)
 	{		
 		return FALSE;
 	}
@@ -408,7 +418,7 @@ BOOLEAN get_input(char * input, int length)
 {	
 	fgets(input, length + EXTRACHARS, stdin);
 	
-	if(input[0] == '\n')
+	if(input[1] == '\0')
 	{
 		return TRUE;
 	}

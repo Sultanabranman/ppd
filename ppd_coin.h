@@ -21,7 +21,9 @@
 
 /** valid range of cents **/
 #define MIN_CENTS 0
-#define MAX_CENTS 99
+#define MAX_CENTS 95
+#define MAX_DOLLARS 99
+
 
 struct ppd_system;
 /**
@@ -53,6 +55,9 @@ struct coin
 BOOLEAN initialise_cash_register(struct ppd_system *);
 
 /** convert the integer to denomination **/
-enum denomination convert_denom(char *);
+enum denomination convert_denom(int);
+
+/** check price entered is valid **/
+BOOLEAN check_price_input(int);
 
 #endif

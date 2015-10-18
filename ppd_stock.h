@@ -174,6 +174,15 @@ BOOLEAN add_to_end_of_list(struct ppd_node *, struct ppd_stock *);
 BOOLEAN remove_node(struct ppd_system *, char *);
 /** searches item list for highest id **/
 int get_latest_id(struct ppd_system *);
+
+/** searches item list for entered id **/
+BOOLEAN search_for_id(struct ppd_system *, char *);
+
+/** get selected item from list */
+struct ppd_stock * get_selected_item(struct ppd_system *, char *);
+
+/** deduct from stock **/
+void deduct_from_stock(char *, struct ppd_system *);
 #endif
 
 

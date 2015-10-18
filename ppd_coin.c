@@ -33,24 +33,12 @@ BOOLEAN initialise_cash_register(struct ppd_system * system)
 	return TRUE;
 }
 
-enum denomination convert_denom(char * token)
+enum denomination convert_denom(int value)
 {
 	/** array to match denomination to value **/
 	const int denom_value[NUM_DENOMS] = {5, 10, 20, 50, 100, 200, 500, 1000};
 	/** loop counter **/
-	enum denomination i;
-	char * end;
-	int value = 0;
-	
-	value = strtol(token, &end, 0);
-	
-	/** if extra data is found in token **/
-	if(*end)
-	{
-		fprintf(stderr, "Error loading coin file: denom token "
-			    "is not valid\n");
-		exit(EXIT_FAILURE);
-	}
+	enum denomination i;		
 	
 	for(i = FIVE_CENTS; i <= TEN_DOLLARS; ++i)
 	{
@@ -64,4 +52,27 @@ enum denomination convert_denom(char * token)
 	fprintf(stderr, "Error loading coin file: denom token "
 			    "is not valid\n");
 	exit(EXIT_FAILURE);	
+}
+
+BOOLEAN check_price_input(int price)
+{
+	int i;	
+	const int denom_value[NUM_DENOMS] = {5, 10, 20, 50, 100, 200, 500, 1000};	
+	
+	/** check price against all valid denominations **/
+	for(i = 0; i < NUM_DENOMS; i++)
+	{
+		/** if price matches **/
+		if(price == denom_value[i])
+		{
+			return TRUE;
+		}
+		/** if price doesn't match **/
+		else if(price != denom_value[i] && i == NUM_DENOMS-1)
+		{
+			return FALSE;
+		}
+	}
+	
+	return FALSE;
 }

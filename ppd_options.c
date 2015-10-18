@@ -68,37 +68,238 @@ BOOLEAN display_items(struct ppd_system * system)
 BOOLEAN purchase_item(struct ppd_system * system)
 {
 	char id[IDLEN+EXTRACHARS];
+	char price_entered[PRICELEN+EXTRACHARS];
+	struct ppd_stock * selected_item = NULL;
+	struct price amount_owing;
+	BOOLEAN valid = FALSE;
+	int price = 0;
+	int amount_remaining = 0;
+	char * end;
+	int amount_inserted[1999] = {0};
+	int i = 0;
+	int k;
+	enum denomination current_amount;	
 	
     printf("Purchase Item\n");
 	printf("-------------\n");
-	printf("Please enter the id of the item you wish to purchase: ");
 	
-	/** get id **/
-	get_input(id, IDLEN + EXTRACHARS);
+	while(valid != TRUE)
+	{
+		printf("Please enter the id of the item you wish to purchase: ");
 	
-	/** search item_list for id **/
+	    /** get id **/
+	    switch(get_input(id, IDLEN))
+	    {
+		    case TRUE:
+		    {
+			    if(id[1] == '\0')
+			    {				
+			    	return FALSE;
+			    }
+			
+			    /** search item_list for id **/
+	            switch(search_for_id(system, id))
+	            {
+		            case TRUE:
+		            {
+						selected_item = get_selected_item(system, id);
+						if(selected_item->on_hand == 0)
+						{
+							fprintf(stderr, "Error: selected item is out of "
+								"stock\n");
+							continue;
+						}
+			            valid = TRUE;
+						break;
+		            }
+		            case FALSE:
+		            {
+			            fprintf(stderr, "Error: the id you entered was not "
+						    "valid. Please try again.\n");
+						continue;
+		            }
+	            }
+				break;
+		    }
+		    case FALSE:
+		    {
+			    fprintf(stderr, "Error: you did not enter a valid id. " 
+				    "Please try again.\n");
+			    continue;
+		    }
+	    }
+	}
+	
+	printf("You have selected %s - %s. This will cost you $%d.%02d\n", 
+		selected_item->name, selected_item->desc, selected_item->price.dollars
+		, selected_item->price.cents);
+	
+	printf("Please hand over the money - type in the value of each note/coin" 
+		"in cents.\n");
+	printf("Press enter or ctrl-d on a new line to cancel this purchase:\n");
+	
+	/** set amount owing to price of item_selected **/
+	amount_owing.dollars = selected_item->price.dollars;
+	amount_owing.cents = selected_item->price.cents;
+	
+	/** convert price to cents **/
+	amount_remaining = (amount_owing.dollars * 100) + amount_owing.cents;
 	
 	/** loop until price has been filled **/
+	while(amount_remaining > 0)
+	{
+		printf("You still need to give us $%d.%02d: ", amount_owing.dollars,
+			amount_owing.cents);
+		
+		/** get user input **/
+		switch(get_input(price_entered, PRICELEN))
+		{
+			case TRUE:
+			{
+				/** if RTM **/
+				if(price_entered[1] == '\0')
+				{
+					return FALSE;
+				}
+				
+				/** convert input to integer **/
+				price = strtol(price_entered, &end, 0);
+				
+				/** if an integer wasn't entered **/
+				if(*end)
+				{
+					fprintf(stderr, "Error: you did not enter a valid integer."
+						" Please try again.\n");
+					continue;
+				}
+				/** check input is a valid denomination **/
+				switch(check_price_input(price))
+				{
+					case TRUE:
+					{
+						break;
+					}
+					case FALSE:
+					{
+						fprintf(stderr, "Error: valid denomination was not "
+							"entered. Please try again.\n");
+						continue;
+					}
+				}
+				
+				break;
+			}
+			case FALSE:
+			{
+				continue;
+			}
+		}
+		/** reset loop counter **/
+		i = 0;
+		
+		
+		/** store denominations currently entered into array **/
+		while(TRUE)
+		{
+			if(amount_inserted[i] == 0)
+			{
+				amount_inserted[i] = price;
+				break;
+			}
+			
+			i++;
+		}		
+		
+		/** deduct value from amount owing **/
+		amount_remaining -= (price);	
+		
+		/** get dollar value from amount remaining **/
+		amount_owing.dollars = (amount_remaining/100);		
+		
+		/** get cents value from amount remaining **/
+		amount_owing.cents = (amount_remaining % 100);	
+		
+	}
 	
-	/** store denominations currently entered into dynamic array **/
+	
 	
 	/** give any change required **/
 	
 	/** deduct item from stock **/
+	deduct_from_stock(id, system);
 	
 	/** deduct coins from register **/
 	
+	
+	
+	/** reset loop counter **/
+	i = 0;
+	
 	/** add coins to register **/
+	while(amount_inserted[i] != 0)
+	{
+		current_amount = convert_denom(amount_inserted[i]);
+		
+		for(k = 0; k < NUM_DENOMS; k++)
+		{
+			if(system->cash_register[k].denom == current_amount 
+				&& current_amount == FIVE_CENTS)
+			{
+				system->cash_register[k].count++;
+				break;
+			}
+			else if(system->cash_register[k].denom == current_amount 
+				&& current_amount == TEN_CENTS)
+			{
+				system->cash_register[k].count++;
+				break;
+			}
+			else if(system->cash_register[k].denom == current_amount 
+				&& current_amount == TWENTY_CENTS)
+			{
+				system->cash_register[k].count++;
+				break;
+			}
+			else if(system->cash_register[k].denom == current_amount 
+				&& current_amount == FIFTY_CENTS)
+			{
+				system->cash_register[k].count++;
+				break;
+			}
+			else if(system->cash_register[k].denom == current_amount 
+				&& current_amount == ONE_DOLLAR)
+			{
+				system->cash_register[k].count++;
+				break;
+			}
+			else if(system->cash_register[k].denom == current_amount 
+				&& current_amount == TWO_DOLLARS)
+			{
+				system->cash_register[k].count++;
+				break;
+			}
+			else if(system->cash_register[k].denom == current_amount 
+				&& current_amount == FIVE_DOLLARS)
+			{
+				system->cash_register[k].count++;
+				break;
+			}
+			else if(system->cash_register[k].denom == current_amount 
+				&& current_amount == TEN_DOLLARS)
+			{
+				system->cash_register[k].count++;
+				break;
+			}
+		}
+		
+		i++;
+			
+	}
 	
-	
-	
-	printf("You have selected %s - %s. This will cost you $%d.%d");
-	printf("Please hand over the money - type in the value of each note/coin in cents.\n");
-	printf("Press enter or ctrl-d on a new line to cancel this purchase:\n");
-	printf("You still need to give us $%d.%d: ");
-	printf("Here is your %s and your change of $%d.%d: ");
+	printf("Here is your %s and your change of ", selected_item->name);
 	printf("Please come again soon\n");
-    return FALSE;
+	
+    return TRUE;
 }
 
 /**
@@ -249,9 +450,9 @@ BOOLEAN add_item(struct ppd_system * system)
 		{
 			continue;
 		}
-        if(name[0] == '\n')	
+        if(name[1] == '\0')	
 		{
-			printf("Operation cancelled at the user's request.\n");
+			printf("\nOperation cancelled at the user's request.\n");
 		    return FALSE;
 		}		
 		
@@ -272,9 +473,9 @@ BOOLEAN add_item(struct ppd_system * system)
 		{
 			continue;
 		}
-	    if(desc[0] == '\n')
+	    if(desc[1] == '\0')
 	    {
-		    printf("Operation cancelled at the user's request.\n");
+		    printf("\nOperation cancelled at the user's request.\n");
 		    return FALSE;
 	    }		
 		
@@ -296,9 +497,9 @@ BOOLEAN add_item(struct ppd_system * system)
 		{
 			continue;
 		}
-	    if(price[0] == '\n')
+	    if(price[1] == '\0')
 	    {
-		    printf("Operation cancelled at the user's request.\n");
+		    printf("\nOperation cancelled at the user's request.\n");
 		    return FALSE;
 	    }		
 		/** validate price data **/
@@ -336,9 +537,9 @@ BOOLEAN remove_item(struct ppd_system * system)
 		printf("Enter the item id of the item to remove from the menu: ");
 		/** get user input and check if blank**/	
 		fgets(id, IDLEN + EXTRACHARS, stdin);
-	    if(id[0] == '\n')
+	    if(id[1] == '\0')
 	    {
-		    printf("Operation cancelled at the user's request.\n");
+		    printf("\nOperation cancelled at the user's request.\n");
 		    return FALSE;
 	    }
 		
